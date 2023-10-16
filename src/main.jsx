@@ -7,6 +7,7 @@ import Home from './Components/Home/Home.jsx'
 import Login from './Components/Login/Login'
 import Registration from './Components/Registration/Registration'
 import './index.css'
+import firebaseConfig from './Auth/Firebase';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
