@@ -74,7 +74,7 @@ const Registration = () => {
           reset()
         toast.success( "Registration Successful", {} )
         setTimeout( () => {
-          navigate("/login")
+          navigate("/")
         }, 2000)
         })
       })

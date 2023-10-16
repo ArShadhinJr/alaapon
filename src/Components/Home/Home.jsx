@@ -13,7 +13,7 @@ const Home = () => {
     const handleSignOut = () => {
         signOut(auth).then(() => {
         setTimeout(() => {
-            navigate("/login")
+            navigate("/")
         }, 2000 );
         toast.success("Sign Out")
         }).catch((error) => {
