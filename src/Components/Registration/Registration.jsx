@@ -102,7 +102,7 @@ const Registration = () => {
       theme="light"
       />
     <CenterDiv className="w-[800px] flex bg-primary rounded-lg">
-      <div className="w-2/5 bg-signup rounded-lg rounded-r-none bg-cover">
+      <div className="w-2/5 bg-[url('https://i.ibb.co/PtnD1Hj/pexels-miguel-padri-n-1111368-1.jpg')] rounded-lg rounded-r-none bg-cover">
         <h2 className="text-white font-bold text-3xl px-6 py-10">User Registration Form</h2>
       </div>
       <div className="w-3/5 text-white px-10 py-12">
@@ -117,7 +117,7 @@ const Registration = () => {
             <Input type="password" name="password" value={values.password} onChange={handleValues} label="Password" />
             <Error>{errors.password}</Error>
             <div className="flex items-center justify-between mt-8">
-              <p><Link to="/login" className="hover:text-gray-100 hover:underline ">Already have account</Link></p>
+              <p><Link to="/" className="hover:text-gray-100 hover:underline ">Already have account</Link></p>
               <Button className="bg-thirty" name="Sign Up"></Button>
             </div>
           </div>
