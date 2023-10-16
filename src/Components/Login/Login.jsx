@@ -64,7 +64,11 @@ const Login = () => {
       .then((user) => {
         console.log( user.user.emailVerified ) 
           if (user.user.emailVerified) {
-            navigate('/home')
+            setTimeout( () => {
+              navigate( '/home' )
+              reset()
+              toast.success( "Login Successful", {} )
+            }, 2000)
           } else {
             toast.error("Please verify your email")
           }
