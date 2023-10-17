@@ -102,7 +102,7 @@ const Registration = () => {
       theme="light"
       />
     <CenterDiv className="md:w-[800px] w-11/12 sm:mx-0  md:flex bg-primary rounded-lg">
-      <div className="md:w-2/5 bg-[url('https://i.ibb.co/PtnD1Hj/pexels-miguel-padri-n-1111368-1.jpg')] rounded-lg rounded-r-none bg-cover">
+      <div className="md:w-2/5 bg-[url('https://i.ibb.co/PtnD1Hj/pexels-miguel-padri-n-1111368-1.jpg')] rounded-lg md:rounded-r-none rounded-b-none bg-cover">
         <h2 className="text-white font-bold text-3xl px-6 py-10">User Registration Form</h2>
       </div>
       <div className="md:w-3/5 text-white px-10 py-12">
