@@ -40,14 +40,14 @@ const Home = () => {
         pauseOnHover
         theme="light"
         />
-        <CenterDiv className="w-96 h-96 bg-primary rounded-lg text-center py-5">
+        <CenterDiv className="w-96 bg-primary rounded-lg text-center py-5">
             <img src={logo} className="w-36 inline-block " />
             <h2 className="text-xl bg-white inline-block text-primary font-black p-1 rounded ml-4">Home</h2>
             <h3 className="text-xl text-white">Name: {user?.displayName}</h3>
             <h3 className="text-xl text-white">Email: {user?.email}</h3>
             {
                 user ? <div className="text-center mt-3">
-                <img src={user?.photoURL ? user?.photoURL : demoPP} className="rounded-full inline-block w-20" />
+                <img src={user?.photoURL ? user?.photoURL : demoPP} className="rounded-full inline-block w-36" />
             </div> : null
             }
             <Button onClick={handleSignOut} className="bg-thirty text-white mt-2" >Sign Out</Button>
