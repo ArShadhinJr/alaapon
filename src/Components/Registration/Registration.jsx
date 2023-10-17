@@ -86,7 +86,10 @@ const Registration = () => {
           })
           .catch((error) => {
             const errorCode = error.code;
-            toast.error(errorCode)
+            if ( errorCode === "auth/email-already-in-use" ) {
+              toast.error("email-already-in-use")
+            }
+            
           });
       })
       .catch((error) => {
