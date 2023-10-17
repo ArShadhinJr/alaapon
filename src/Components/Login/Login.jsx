@@ -5,8 +5,9 @@ import logo from './../../assets/alaaponlogo.png'
 import Button from "../Buttons/Button"
 import { useState } from "react"
 import Error from "../Error/Error"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify"
+import google from "../../assets/Google.svg"
 
 
 const Login = () => {
@@ -84,6 +85,30 @@ const Login = () => {
     }
   }
 
+  const handleGoogle = () => {
+    signInWithPopup( auth, new GoogleAuthProvider() )
+      .then( ( user ) => {
+        console.log( user.user.emailVerified )
+        if ( user.user.emailVerified ) {
+          setTimeout( () => {
+            navigate( '/home' )
+            
+          }, 2000 )
+          setTimeout( () => {
+            reset()
+          }, 1500 )
+          toast.success( "Login Successful", {} )
+        } else {
+          toast.error( "Please verify your email" )
+        }
+      
+      } )
+      .catch( ( error ) => {
+        const errorCode = error.code;
+        console.log( errorCode )
+      } );
+  }
+
   return (
     <>
       <ToastContainer
@@ -113,10 +138,11 @@ const Login = () => {
             <Error>{errors.password}</Error>
             <div className="flex items-center justify-between mt-8">
               <p><Link to="/regi" className="hover:text-gray-100 hover:underline ">I have no account</Link></p>
-              <Button className="bg-thirty" name="Login"></Button>
+              <Button className="bg-thirty" >Login</Button>
             </div>
           </div>
         </form>
+        <Button className="bg-white text-black mt-4" onClick={handleGoogle}> <img src={google} className="mr-2 inline" /> Login with Google</Button>
       </div>
     </CenterDiv>
     </>

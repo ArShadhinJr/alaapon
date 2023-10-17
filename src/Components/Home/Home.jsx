@@ -36,7 +36,7 @@ const Home = () => {
         />
         <CenterDiv className="w-96 h-96 bg-primary rounded-lg text-center py-5">
             <h2 className="text-2xl text-white text-center">This is Home</h2>
-            <Button onClick={handleSignOut} className="bg-thirty text-white mt-2" name="Sign Out"></Button>
+            <Button onClick={handleSignOut} className="bg-thirty text-white mt-2" >Sign Out</Button>
         </CenterDiv>
     </>
   )

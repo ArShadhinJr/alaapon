@@ -118,7 +118,7 @@ const Registration = () => {
             <Error>{errors.password}</Error>
             <div className="flex items-center justify-between mt-8">
               <p><Link to="/" className="hover:text-gray-100 hover:underline ">Already have account</Link></p>
-              <Button className="bg-thirty" name="Sign Up"></Button>
+              <Button className="bg-thirty" >Sign Up</Button>
             </div>
           </div>
         </form>
