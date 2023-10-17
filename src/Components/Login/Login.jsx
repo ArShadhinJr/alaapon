@@ -8,9 +8,13 @@ import Error from "../Error/Error"
 import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify"
 import google from "../../assets/Google.svg"
+import { setUser } from "../../Slice/userSlice"
+import { useDispatch } from "react-redux"
 
 
 const Login = () => {
+
+  const dispatch = useDispatch()
 
   const auth = getAuth();
   const navigate = useNavigate();
@@ -51,7 +55,7 @@ const Login = () => {
     })
   }
 
-  const handleSubmit = ( e ) => {
+  const handleLogin = ( e ) => {
     e.preventDefault()
     if( values.email === "" || values.password === "") {
       setErrors({
@@ -63,24 +67,31 @@ const Login = () => {
     if ( values.email && values.password ) {
       signInWithEmailAndPassword(auth, values.email, values.password)
       .then((user) => {
-        console.log( user.user.emailVerified ) 
           if (user.user.emailVerified) {
             setTimeout( () => {
               navigate( '/home' )
-              
             }, 2000 )
             setTimeout(()=>{
               reset()
             }, 1500)
             toast.success( "Login Successful", {} )
+            dispatch( setUser( user.user ) )
+            localStorage.setItem( "user", JSON.stringify( user.user ) )
           } else {
-            toast.error("Please verify your email")
+            toast.error( "Please verify your email" )
           }
         
       })
       .catch((error) => {
         const errorCode = error.code;
         console.log(errorCode)
+        if(errorCode === "auth/invalid-login-credentials"){
+              toast.error( "User not found, check your email and password" )
+            } else if (errorCode === "auth/too-many-requests") {
+              toast.error( "Too many requests, try again later" )
+            } else if (errorCode === "auth/invalid-email") {
+              toast.error( "Invalid email" )
+            }
       });
     }
   }
@@ -98,6 +109,8 @@ const Login = () => {
             reset()
           }, 1500 )
           toast.success( "Login Successful", {} )
+          dispatch( setUser( user.user ) )
+          localStorage.setItem( "user", JSON.stringify( user.user ) )
         } else {
           toast.error( "Please verify your email" )
         }
@@ -130,7 +143,7 @@ const Login = () => {
       <div className="md:w-3/5 text-white px-10 py-12">
         <img src={logo} className="w-36 mb-4"/>
         <h3 className="text-2xl">Login</h3>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div>
             <Input type="email" name="email" value={values.email} onChange={handleValues} label="Email Address" />
             <Error>{errors.email}</Error>

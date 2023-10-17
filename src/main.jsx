@@ -8,10 +8,13 @@ import Login from './Components/Login/Login'
 import Registration from './Components/Registration/Registration'
 import './index.css'
 import firebaseConfig from './Auth/Firebase';
+import { Provider } from 'react-redux'
+import { store } from './store';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />}/>
         <Route path="/regi" element={<Registration />}/>
@@ -19,5 +22,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
          
       </Routes>
     </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
 )

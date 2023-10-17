@@ -6,7 +6,7 @@ import logo from './../../assets/alaaponlogo.png'
 import Button from "../Buttons/Button"
 import { useState } from "react"
 import Error from "../Error/Error"
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify"
 
 
@@ -68,7 +68,8 @@ const Registration = () => {
 
     if ( values.name && values.email && values.password ) {
       createUserWithEmailAndPassword(auth, values.email, values.password)
-      .then(() => {
+      .then((userCredential) => {
+        const user = userCredential.user
         sendEmailVerification( auth.currentUser)
         .then( () => {
           reset()
@@ -76,11 +77,21 @@ const Registration = () => {
         setTimeout( () => {
           navigate("/")
         }, 2000)
+        } )
+        updateProfile(user, {
+          displayName: values.name
         })
+          .then(() => {
+            
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            toast.error(errorCode)
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
-        console.log(errorCode);
+        toast.error(errorCode);
       });
       
       
