@@ -9,6 +9,7 @@ import './index.css'
 import firebaseConfig from './Auth/Firebase';
 import { Provider } from 'react-redux'
 import { store } from './store';
+import Forgot from './Components/Forgot/Forgot.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Login />}/>
         <Route path="/regi" element={<Registration />}/>
         <Route path="/home" element={<Home />}/>
+        <Route path="/forgot" element={<Forgot />}/>
          
       </Routes>
     </BrowserRouter>

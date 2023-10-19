@@ -8,9 +8,12 @@ import { useState } from "react"
 import Error from "../Error/Error"
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify"
+import {AiFillEye , AiFillEyeInvisible} from 'react-icons/ai'
 
 
 const Registration = () => {
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const auth = getAuth()
   const navigate = useNavigate()
@@ -128,7 +131,10 @@ const Registration = () => {
             <Error>{errors.name}</Error>
             <Input type="email" name="email" value={values.email} onChange={handleValues} label="Email Address" />
             <Error>{errors.email}</Error>
-            <Input type="password" name="password" value={values.password} onChange={handleValues} label="Password" />
+            <div className="relative">
+              <Input type={showPassword ? "text" : "password"} name="password" value={values.password} onChange={handleValues} label="Password" />
+            <p className="absolute top-1/2 right-0 -translate-x-1/2 -translate-y-1/2 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>{showPassword? <AiFillEyeInvisible/> : <AiFillEye/>}</p>
+            </div>
             <Error>{errors.password}</Error>
             <div className="flex items-center justify-between mt-8">
               <p><Link to="/" className="hover:text-gray-100 hover:underline ">Already have account</Link></p>
