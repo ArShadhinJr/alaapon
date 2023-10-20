@@ -46,6 +46,8 @@ const Forgot = () => {
         <form onSubmit={handleResetPassword}>
             <Input type="email" name="email" label="Email Address" />
             <Button className="bg-white text-black mt-4">Reset Password</Button>
+            <Button className="bg-white text-black mt-4 ms-4" onClick={() => navigate('/')}>Home</Button>
+            
         </form>
     </CenterDiv>
     </>
