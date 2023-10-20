@@ -3,9 +3,10 @@ import Button from "../Buttons/Button"
 import CenterDiv from "../CenterDiv/CenterDiv"
 import { getAuth, signOut } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import demoPP from '../../assets/demo.avif'
 import logo from '../../assets/alaaponlogo.png'
+import { setUser } from "../../Slice/userSlice";
 
 
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
     console.log(user)
     const auth = getAuth();
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const handleSignOut = () => {
         signOut(auth).then(() => {
@@ -21,7 +23,8 @@ const Home = () => {
             navigate("/")
         }, 2000 );
         toast.success("Sign Out")
-        localStorage.removeItem('user')
+            localStorage.removeItem( 'user' )
+            dispatch( setUser( null ) )
         }).catch((error) => {
         console.log(error)
         });
