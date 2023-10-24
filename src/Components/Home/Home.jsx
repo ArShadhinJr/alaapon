@@ -24,6 +24,7 @@ const Home = () => {
     
     const [image, setImage] = useState("");
     const [cropData, setCropData] = useState("");
+    console.log(cropData);
     const cropperRef = createRef();
     
     const [showModal , setShowModal] = React.useState(false)
