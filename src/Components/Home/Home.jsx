@@ -1,4 +1,4 @@
-import React from "react"
+import React, { createRef, useState } from "react"
 import logo from '../../assets/alaaponlogo.png'
 import demoImg from '../../assets/demo.avif'
 import { RiUploadCloudFill } from 'react-icons/ri'
@@ -8,14 +8,24 @@ import { AiFillBell, AiFillHome, AiFillSetting } from "react-icons/ai"
 import { FaCommentDots } from "react-icons/fa"
 import { BsChevronBarLeft, BsChevronBarRight } from 'react-icons/bs'
 import { VscSignOut } from 'react-icons/vsc'
-import { getAuth, signOut  } from "firebase/auth";
+import { getAuth, signOut, updateProfile  } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify"
 import { setUser } from "../../Slice/userSlice"
 import ModalProfileUpdate from "../ModalProfileUpdate/ModalProfileUpdate"
+// crop image and upload in firebase 
+import "cropperjs/dist/cropper.css";
+import { getDownloadURL, getStorage, ref, uploadString } from "firebase/storage";
+
 
 
 const Home = () => {
 
+    const storage = getStorage();
+    
+    const [image, setImage] = useState("");
+    const [cropData, setCropData] = useState("");
+    const cropperRef = createRef();
+    
     const [showModal , setShowModal] = React.useState(false)
 
     const auth = getAuth()
@@ -47,8 +57,11 @@ const Home = () => {
             icon: <AiFillSetting></AiFillSetting>
         }
     ]
+            
     
     const user = useSelector( ( state ) => state.user.userInfo )
+    const storageRef = ref(storage, (user ? user.uid : ''));
+
     const handleSignOut = () => {
         signOut(auth).then(() => {
             setTimeout(() => {
@@ -59,6 +72,52 @@ const Home = () => {
             dispatch(setUser(null))
         })
     }
+
+    const handleUpload = (e) => {
+        e.preventDefault();
+    let files;
+    if (e.dataTransfer) {
+      files = e.dataTransfer.files;
+    } else if (e.target) {
+      files = e.target.files;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
+    }
+
+      const getCropData = () => {
+    if (typeof cropperRef.current?.cropper !== "undefined") {
+      setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+      
+      const message = cropperRef.current?.cropper.getCroppedCanvas().toDataURL();
+        uploadString(storageRef, message, 'data_url').then((snapshot) => {
+            console.log( 'Uploaded a data_url string!' );
+            getDownloadURL(storageRef).then((downloadURL) => {
+                console.log( 'File available at', downloadURL );
+                updateProfile(auth.currentUser, {
+                photoURL: downloadURL
+                }).then(() => {
+                    toast.success( "Profile Picture Updated" )
+                    setShowModal( false )
+                    dispatch(setUser({
+                        ...user,
+                        photoURL: downloadURL
+                    } ) )
+                    localStorage.setItem( "user", JSON.stringify( {
+                        ...user,
+                        photoURL: downloadURL
+                    } ) )
+                    setImage("")
+                }).catch((error) => {
+                    toast.error(error.message)
+                });
+            });
+        });
+    }
+    };
     
     return (
     <React.Fragment>
@@ -74,7 +133,7 @@ const Home = () => {
             pauseOnHover
             theme="colored"
         />
-        {showModal && <ModalProfileUpdate onClick={() => setShowModal(false)}></ModalProfileUpdate>}
+        {showModal && <ModalProfileUpdate getCropData={getCropData} image={image} cropperRef={cropperRef} onChange={handleUpload} onClick={() => setShowModal(false)}></ModalProfileUpdate>}
         <div className="h-screen">
             <nav className="bg-thirty h-[10%]  md:px-24 px-3 flex items-center justify-between">
               <div>
@@ -85,6 +144,7 @@ const Home = () => {
                   {screen.width > 768 ? <div><h3 className="text-xl text-white mr-6">{user?.displayName}</h3></div> : null}
                   <div className="relative w-16 h-full group cursor-pointer">
                   <img src={user?.photoURL ? user?.photoURL : demoImg} className="w-16 inline-block rounded-full" />
+                  <span className="absolute bg-green-500 w-3 h-3 rounded-full bottom-1 right-0"></span>
                   <div onClick={() => setShowModal(true)} className="absolute top-0 left-0 grid place-content-center w-16  h-full bg-[rgba(0,0,0,0.5)] rounded-full opacity-0 group-hover:opacity-100 transform transition-all duration-200">
                       <RiUploadCloudFill className="text-white text-xl"></RiUploadCloudFill>
                   </div>
