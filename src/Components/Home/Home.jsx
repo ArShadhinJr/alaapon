@@ -1,30 +1,57 @@
-import React, { createRef, useState } from "react"
-import logo from '../../assets/alaaponlogo.png'
-import demoImg from '../../assets/demo.avif'
-import { RiUploadCloudFill } from 'react-icons/ri'
-import { Link, useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
+import { getAuth, signOut, updateProfile } from "firebase/auth"
+import React, { createRef, useEffect, useState } from "react"
 import { AiFillBell, AiFillHome, AiFillSetting } from "react-icons/ai"
-import { FaCommentDots } from "react-icons/fa"
 import { BsChevronBarLeft, BsChevronBarRight } from 'react-icons/bs'
+import { FaCommentDots } from "react-icons/fa"
+import { RiUploadCloudFill } from 'react-icons/ri'
 import { VscSignOut } from 'react-icons/vsc'
-import { getAuth, signOut, updateProfile  } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from "react-toastify"
 import { setUser } from "../../Slice/userSlice"
+import logo from '../../assets/alaaponlogo.png'
+import demoImg from '../../assets/demo.avif'
 import ModalProfileUpdate from "../ModalProfileUpdate/ModalProfileUpdate"
 // crop image and upload in firebase 
-import "cropperjs/dist/cropper.css";
-import { getDownloadURL, getStorage, ref, uploadString } from "firebase/storage";
+import "cropperjs/dist/cropper.css"
+import { getDownloadURL, getStorage, ref, uploadString } from "firebase/storage"
 
 
 
 const Home = () => {
 
+    const [ online, setOnline ] = useState( true )
+    
+    const handleOnlineStatus = () => {
+    if (navigator.onLine) {
+        // User is online
+        setOnline( true );
+        toast.success("You are online")
+    } else {
+        // User is offline
+        setOnline( false );
+        toast.error("You are offline")
+    }
+    };
+
+    useEffect(() => {
+    // Add event listener for online/offline changes
+    window.addEventListener("online", handleOnlineStatus);
+    window.addEventListener("offline", handleOnlineStatus);
+
+    // Clean up the event listeners on component unmount
+    return () => {
+      window.removeEventListener("online", handleOnlineStatus);
+      window.removeEventListener("offline", handleOnlineStatus);
+    };
+     }, []);
+    
+
+
     const storage = getStorage();
     
     const [image, setImage] = useState("");
     const [cropData, setCropData] = useState("");
-    console.log(cropData);
     const cropperRef = createRef();
     
     const [showModal , setShowModal] = React.useState(false)
@@ -145,7 +172,7 @@ const Home = () => {
                   {screen.width > 768 ? <div><h3 className="text-xl text-white mr-6">{user?.displayName}</h3></div> : null}
                   <div className="relative w-16 h-full group cursor-pointer">
                   <img src={user?.photoURL ? user?.photoURL : demoImg} className="w-16 inline-block rounded-full" />
-                  <span className="absolute bg-green-500 w-3 h-3 rounded-full bottom-1 right-0"></span>
+                  <span  className={`absolute  w-3 h-3 rounded-full bottom-1 right-0 z-10 ` +  (online ? "bg-green-500" : "bg-red-500")} ></span>
                   <div onClick={() => setShowModal(true)} className="absolute top-0 left-0 grid place-content-center w-16  h-full bg-[rgba(0,0,0,0.5)] rounded-full opacity-0 group-hover:opacity-100 transform transition-all duration-200">
                       <RiUploadCloudFill className="text-white text-xl"></RiUploadCloudFill>
                   </div>
@@ -165,11 +192,8 @@ const Home = () => {
                         </ul>
                     </div>
                     <div className="px-6">
-                        <h2 onClick={handleSignOut} className="text-white flex items-center py-2 gap-x-4 text-2xl active:scale-95 hover:text-[rgba(255,255,255,0.7)]"><VscSignOut></VscSignOut>{showSidebar && "Sign Out"}</h2>
+                        <h2 onClick={handleSignOut} className="text-white flex items-center py-2 gap-x-4 text-2xl active:scale-95 hover:text-[rgba(255,255,255,0.7)] cursor-pointer"><VscSignOut></VscSignOut>{showSidebar && "Sign Out"}</h2>
                     </div>
-                </div>
-                <div className="fixed bottom-0 right-0 h-26">
-                    Hello 
                 </div>
             </div>
         </div>
